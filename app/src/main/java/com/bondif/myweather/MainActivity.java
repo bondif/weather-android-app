@@ -1,5 +1,6 @@
 package com.bondif.myweather;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,8 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String CITY_NAME = "com.bondif.myweather.CITY_NAME";
     private EditText etSearch;
     private ImageButton btnSearch;
+    private Button btnCityDetail;
     private ListView lvWeatherEntries;
 
     private List<WeatherItem> data;
@@ -92,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
                 queue.add(request);
             }
         });
+
+        btnCityDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CityDetail.class);
+                String city = etSearch.getText().toString();
+                intent.putExtra(CITY_NAME, city);
+                startActivity(intent);
+            }
+        });
     }
 
     private void init() {
@@ -102,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     private void setResourceReferences() {
         etSearch         = findViewById(R.id.etSeach);
         btnSearch        = findViewById(R.id.btnSearch);
+        btnCityDetail    = findViewById(R.id.btnCityDetail);
         lvWeatherEntries = findViewById(R.id.lvWeatherEntries);
     }
 }

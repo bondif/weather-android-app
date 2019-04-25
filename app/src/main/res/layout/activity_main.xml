@@ -25,7 +25,7 @@
         <ImageButton
             android:id="@+id/btnSearch"
             style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
+            android:layout_width="42dp"
             android:layout_height="37dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
@@ -33,6 +33,19 @@
             android:contentDescription="search button"
             app:srcCompat="@android:drawable/ic_media_play" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCityDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="City Detail" />
     </LinearLayout>
 
     <ListView
