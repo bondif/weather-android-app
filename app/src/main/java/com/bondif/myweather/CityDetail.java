@@ -29,7 +29,11 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +54,11 @@ public class CityDetail extends AppCompatActivity {
     private Button btnTemp;
     private Button btnPrecipitation;
     private Button btnWind;
+    private Button btnToday;
+    private Button btnDay1;
+    private Button btnDay2;
+    private Button btnDay3;
+    private Button btnDay4;
     private List<ChartWeatherItem> data = new LinkedList<>();
     private LinearLayout layoutChart;
 
@@ -78,7 +87,7 @@ public class CityDetail extends AppCompatActivity {
 
                     /* get date */
                     Date date = new Date(today.getLong("dt") * 1000);
-                    SimpleDateFormat dayNameSdf = new SimpleDateFormat("EE");
+                    SimpleDateFormat dayNameSdf = new SimpleDateFormat("EEEE");
                     SimpleDateFormat dateSdf = new SimpleDateFormat("dd/MM/yyyy");
                     tvDay.setText(dayNameSdf.format(date));
                     tvDate.setText(dateSdf.format(date));
@@ -243,6 +252,224 @@ public class CityDetail extends AppCompatActivity {
             }
         });
 
+        btnToday.setOnClickListener(event -> {
+            btnToday.setTextColor(getResources().getColor(R.color.colorAccent));
+            btnDay1.setTextColor(getResources().getColor(R.color.black));
+            btnDay2.setTextColor(getResources().getColor(R.color.black));
+            btnDay3.setTextColor(getResources().getColor(R.color.black));
+            btnDay4.setTextColor(getResources().getColor(R.color.black));
+
+            /* temperature data set */
+            List<Entry> tempEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 0; i < 8; i++) {
+                tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+            }
+
+            LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+            LineData tempLineData = new LineData(tempDataSet);
+            chartTemp.setData(tempLineData);
+            chartTemp.invalidate();
+
+            /* precipitation data set */
+            List<Entry> entries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 0; i < 8; i++) {
+                entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+            }
+
+            LineDataSet precipitationDataSet = new LineDataSet(entries, "Precipitation");
+            LineData precipitationLineData = new LineData(precipitationDataSet);
+            chartPrecipitation.setData(precipitationLineData);
+            chartPrecipitation.invalidate();
+
+            /* wind data set */
+            List<Entry> windEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 0; i < 8; i++) {
+                windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+            }
+
+            LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+            LineData windLineData = new LineData(windDataSet);
+            chartWind.setData(windLineData);
+            chartWind.invalidate();
+        });
+
+        btnDay1.setOnClickListener(event -> {
+            btnToday.setTextColor(getResources().getColor(R.color.black));
+            btnDay1.setTextColor(getResources().getColor(R.color.colorAccent));
+            btnDay2.setTextColor(getResources().getColor(R.color.black));
+            btnDay3.setTextColor(getResources().getColor(R.color.black));
+            btnDay4.setTextColor(getResources().getColor(R.color.black));
+            /* temperature data set */
+            List<Entry> tempEntries = new ArrayList<>();
+            referenceTimestamp = data.get(8).getTimestamp();
+            for (int i = 8; i < 16; i++) {
+                tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+            }
+
+            LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+            LineData tempLineData = new LineData(tempDataSet);
+            chartTemp.setData(tempLineData);
+            chartTemp.invalidate();
+
+            /* precipitation data set */
+            List<Entry> entries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 8; i < 16; i++) {
+                entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+            }
+
+            LineDataSet precipitationDataSet = new LineDataSet(entries, "Precipitation");
+            LineData precipitationLineData = new LineData(precipitationDataSet);
+            chartPrecipitation.setData(precipitationLineData);
+            chartPrecipitation.invalidate();
+
+            /* wind data set */
+            List<Entry> windEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 8; i < 16; i++) {
+                windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+            }
+
+            LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+            LineData windLineData = new LineData(windDataSet);
+            chartWind.setData(windLineData);
+            chartWind.invalidate();
+        });
+
+        btnDay2.setOnClickListener(event -> {
+            btnToday.setTextColor(getResources().getColor(R.color.black));
+            btnDay1.setTextColor(getResources().getColor(R.color.black));
+            btnDay2.setTextColor(getResources().getColor(R.color.colorAccent));
+            btnDay3.setTextColor(getResources().getColor(R.color.black));
+            btnDay4.setTextColor(getResources().getColor(R.color.black));
+            /* temperature data set */
+            List<Entry> tempEntries = new ArrayList<>();
+            referenceTimestamp = data.get(16).getTimestamp();
+            for (int i = 16; i < 24; i++) {
+                tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+            }
+
+            LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+            LineData tempLineData = new LineData(tempDataSet);
+            chartTemp.setData(tempLineData);
+            chartTemp.invalidate();
+
+            /* precipitation data set */
+            List<Entry> entries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 16; i < 24; i++) {
+                entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+            }
+
+            LineDataSet precipitationDataSet = new LineDataSet(entries, "Precipitation");
+            LineData precipitationLineData = new LineData(precipitationDataSet);
+            chartPrecipitation.setData(precipitationLineData);
+            chartPrecipitation.invalidate();
+
+            /* wind data set */
+            List<Entry> windEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 16; i < 24; i++) {
+                windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+            }
+
+            LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+            LineData windLineData = new LineData(windDataSet);
+            chartWind.setData(windLineData);
+            chartWind.invalidate();
+        });
+
+        btnDay3.setOnClickListener(event -> {
+            btnToday.setTextColor(getResources().getColor(R.color.black));
+            btnDay1.setTextColor(getResources().getColor(R.color.black));
+            btnDay2.setTextColor(getResources().getColor(R.color.black));
+            btnDay3.setTextColor(getResources().getColor(R.color.colorAccent));
+            btnDay4.setTextColor(getResources().getColor(R.color.black));
+
+            /* temperature data set */
+            List<Entry> tempEntries = new ArrayList<>();
+            referenceTimestamp = data.get(24).getTimestamp();
+            for (int i = 24; i < 32; i++) {
+                tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+            }
+
+            LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+            LineData tempLineData = new LineData(tempDataSet);
+            chartTemp.setData(tempLineData);
+            chartTemp.invalidate();
+
+            /* precipitation data set */
+            List<Entry> entries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 24; i < 32; i++) {
+                entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+            }
+
+            LineDataSet precipitationDataSet = new LineDataSet(entries, "Precipitation");
+            LineData precipitationLineData = new LineData(precipitationDataSet);
+            chartPrecipitation.setData(precipitationLineData);
+            chartPrecipitation.invalidate();
+
+            /* wind data set */
+            List<Entry> windEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 24; i < 32; i++) {
+                windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+            }
+
+            LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+            LineData windLineData = new LineData(windDataSet);
+            chartWind.setData(windLineData);
+            chartWind.invalidate();
+        });
+
+        btnDay4.setOnClickListener(event -> {
+            btnToday.setTextColor(getResources().getColor(R.color.black));
+            btnDay1.setTextColor(getResources().getColor(R.color.black));
+            btnDay2.setTextColor(getResources().getColor(R.color.black));
+            btnDay3.setTextColor(getResources().getColor(R.color.black));
+            btnDay4.setTextColor(getResources().getColor(R.color.colorAccent));
+
+            /* temperature data set */
+            List<Entry> tempEntries = new ArrayList<>();
+            referenceTimestamp = data.get(32).getTimestamp();
+            for (int i = 32; i < 40; i++) {
+                tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+            }
+
+            LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+            LineData tempLineData = new LineData(tempDataSet);
+            chartTemp.setData(tempLineData);
+            chartTemp.invalidate();
+
+            /* precipitation data set */
+            List<Entry> entries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 32; i < 40; i++) {
+                entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+            }
+
+            LineDataSet precipitationDataSet = new LineDataSet(entries, "Precipitation");
+            LineData precipitationLineData = new LineData(precipitationDataSet);
+            chartPrecipitation.setData(precipitationLineData);
+            chartPrecipitation.invalidate();
+
+            /* wind data set */
+            List<Entry> windEntries = new ArrayList<>();
+            referenceTimestamp = data.get(0).getTimestamp();
+            for (int i = 32; i < 40; i++) {
+                windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+            }
+
+            LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+            LineData windLineData = new LineData(windDataSet);
+            chartWind.setData(windLineData);
+            chartWind.invalidate();
+        });
+
         configureChart();
     }
 
@@ -260,6 +487,27 @@ public class CityDetail extends AppCompatActivity {
         layoutChart.addView(chartTemp);
 
         btnTemp.setTextColor(getResources().getColor(R.color.colorAccent));
+
+        Date today = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(today);
+
+        SimpleDateFormat dayNameSdf = new SimpleDateFormat("EEEE");
+
+        btnToday.setText(dayNameSdf.format(today));
+        btnToday.setTextColor(getResources().getColor(R.color.colorAccent));
+
+        c.add(Calendar.DAY_OF_WEEK, 1);
+        btnDay1.setText(dayNameSdf.format(c.getTime()));
+
+        c.add(Calendar.DAY_OF_WEEK, 1);
+        btnDay2.setText(dayNameSdf.format(c.getTime()));
+
+        c.add(Calendar.DAY_OF_WEEK, 1);
+        btnDay3.setText(dayNameSdf.format(c.getTime()));
+
+        c.add(Calendar.DAY_OF_WEEK, 1);
+        btnDay4.setText(dayNameSdf.format(c.getTime()));
     }
 
     private void configureChart() {
@@ -296,5 +544,10 @@ public class CityDetail extends AppCompatActivity {
         btnTemp            = findViewById(R.id.btnTemp);
         btnPrecipitation   = findViewById(R.id.btnPrecipitation);
         btnWind            = findViewById(R.id.btnWind);
+        btnToday           = findViewById(R.id.btnToday);
+        btnDay1            = findViewById(R.id.btnDay1);
+        btnDay2            = findViewById(R.id.btnDay2);
+        btnDay3            = findViewById(R.id.btnDay3);
+        btnDay4            = findViewById(R.id.btnDay4);
     }
 }

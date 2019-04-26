@@ -124,7 +124,54 @@
     <LinearLayout
         android:id="@+id/layoutChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="297dp"
         android:orientation="horizontal"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDays"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btnDay1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btnDay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btnDay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btnDay4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button"
+            android:textSize="8sp" />
+    </LinearLayout>
 
 </LinearLayout>
