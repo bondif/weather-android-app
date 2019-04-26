@@ -1,10 +1,14 @@
 package com.bondif.myweather;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -40,8 +44,14 @@ public class CityDetail extends AppCompatActivity {
     private TextView tvWindVal;
     private TextView tvHumidityVal;
     private TextView tvPrecipitationVal;
-    private LineChart chart;
+    private LineChart chartTemp;
+    private LineChart chartPrecipitation;
+    private LineChart chartWind;
+    private Button btnTemp;
+    private Button btnPrecipitation;
+    private Button btnWind;
     private List<ChartWeatherItem> data = new LinkedList<>();
+    private LinearLayout layoutChart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +59,7 @@ public class CityDetail extends AppCompatActivity {
         setContentView(R.layout.city_detail);
 
         setResourceReferences();
+        init();
 
         Intent intent = getIntent();
         String city = intent.getStringExtra(MainActivity.CITY_NAME);
@@ -147,16 +158,41 @@ public class CityDetail extends AppCompatActivity {
                         data.add(item);
                     }
 
-                    List<Entry> entries = new ArrayList<>();
+                    /* temperature data set */
+                    List<Entry> tempEntries = new ArrayList<>();
                     referenceTimestamp = data.get(0).getTimestamp();
                     for (int i = 0; i < 8; i++) {
-                        entries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
+                        tempEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getTemp()));
                     }
 
-                    LineDataSet dataSet = new LineDataSet(entries, "Temperature");
-                    LineData lineData = new LineData(dataSet);
-                    chart.setData(lineData);
-                    chart.invalidate();
+                    LineDataSet tempDataSet = new LineDataSet(tempEntries, "Temperature");
+                    LineData tempLineData = new LineData(tempDataSet);
+                    chartTemp.setData(tempLineData);
+                    chartTemp.invalidate();
+
+                    /* precipitation data set */
+                    List<Entry> precipitationEntries = new ArrayList<>();
+                    referenceTimestamp = data.get(0).getTimestamp();
+                    for (int i = 0; i < 8; i++) {
+                        precipitationEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getPrecipitation()));
+                    }
+
+                    LineDataSet precipitationDataSet = new LineDataSet(precipitationEntries, "Precipitation");
+                    LineData precipitationLineData = new LineData(precipitationDataSet);
+                    chartPrecipitation.setData(precipitationLineData);
+                    chartPrecipitation.invalidate();
+
+                    /* wind data set */
+                    List<Entry> windEntries = new ArrayList<>();
+                    referenceTimestamp = data.get(0).getTimestamp();
+                    for (int i = 0; i < 8; i++) {
+                        windEntries.add(new Entry(data.get(i).getTimestamp(), data.get(i).getWind()));
+                    }
+
+                    LineDataSet windDataSet = new LineDataSet(windEntries, "Wind");
+                    LineData windLineData = new LineData(windDataSet);
+                    chartWind.setData(windLineData);
+                    chartWind.invalidate();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -171,15 +207,82 @@ public class CityDetail extends AppCompatActivity {
         queue.add(request);
         queue.add(request1);
 
+        btnTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutChart.removeAllViews();
+                layoutChart.addView(chartTemp);
+
+                btnTemp.setTextColor(getResources().getColor(R.color.colorAccent));
+                btnPrecipitation.setTextColor(getResources().getColor(R.color.black));
+                btnWind.setTextColor(getResources().getColor(R.color.black));
+            }
+        });
+
+        btnPrecipitation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutChart.removeAllViews();
+                layoutChart.addView(chartPrecipitation);
+
+                btnTemp.setTextColor(getResources().getColor(R.color.black));
+                btnPrecipitation.setTextColor(getResources().getColor(R.color.colorAccent));
+                btnWind.setTextColor(getResources().getColor(R.color.black));
+            }
+        });
+
+        btnWind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutChart.removeAllViews();
+                layoutChart.addView(chartWind);
+
+                btnTemp.setTextColor(getResources().getColor(R.color.black));
+                btnPrecipitation.setTextColor(getResources().getColor(R.color.black));
+                btnWind.setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        });
+
         configureChart();
     }
 
+    private void init() {
+        chartTemp = new LineChart(this);
+        chartTemp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        chartPrecipitation = new LineChart(this);
+        chartPrecipitation.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        chartWind = new LineChart(this);
+        chartWind.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        layoutChart = findViewById(R.id.layoutChart);
+        layoutChart.addView(chartTemp);
+
+        btnTemp.setTextColor(getResources().getColor(R.color.colorAccent));
+    }
+
     private void configureChart() {
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getAxisRight().setEnabled(false);
-        ValueFormatter xAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setValueFormatter(xAxisFormatter);
+        /* temp chart */
+        chartTemp.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chartTemp.getAxisRight().setEnabled(false);
+        ValueFormatter tempXAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        XAxis tempXAxis = chartTemp.getXAxis();
+        tempXAxis.setValueFormatter(tempXAxisFormatter);
+
+        /* precipitation chart */
+        chartPrecipitation.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chartPrecipitation.getAxisRight().setEnabled(false);
+        ValueFormatter precipitationXAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        XAxis precipitationXAxis = chartPrecipitation.getXAxis();
+        precipitationXAxis.setValueFormatter(precipitationXAxisFormatter);
+
+        /* wind chart */
+        chartWind.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chartWind.getAxisRight().setEnabled(false);
+        ValueFormatter windXAxisFormatter = new HourAxisValueFormatter(referenceTimestamp);
+        XAxis windXAxis = chartWind.getXAxis();
+        windXAxis.setValueFormatter(windXAxisFormatter);
     }
 
     private void setResourceReferences() {
@@ -190,6 +293,8 @@ public class CityDetail extends AppCompatActivity {
         tvWindVal          = findViewById(R.id.tvWindVal);
         tvHumidityVal      = findViewById(R.id.tvHumidityVal);
         tvPrecipitationVal = findViewById(R.id.tvPrecipitationVal);
-        chart              = findViewById(R.id.chart);
+        btnTemp            = findViewById(R.id.btnTemp);
+        btnPrecipitation   = findViewById(R.id.btnPrecipitation);
+        btnWind            = findViewById(R.id.btnWind);
     }
 }
