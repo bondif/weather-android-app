@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -99,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
         btnCityDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(etSearch.length() == 0) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please enter a city name!", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+
                 Intent intent = new Intent(getApplicationContext(), CityDetail.class);
                 String city = etSearch.getText().toString();
                 intent.putExtra(CITY_NAME, city);
