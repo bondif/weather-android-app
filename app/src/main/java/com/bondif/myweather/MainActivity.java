@@ -2,7 +2,6 @@ package com.bondif.myweather;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -137,7 +135,10 @@ public class MainActivity extends AppCompatActivity {
 
         /* handling side bar links */
         lvNavList.setOnItemClickListener((parent, view, position, id) -> {
-                Toast.makeText(MainActivity.this, "Test " + position, Toast.LENGTH_SHORT).show();
+                if(position == 1) {
+                    Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
+                    startActivity(intent);
+                }
             }
         );
     }
