@@ -1,10 +1,18 @@
 package com.bondif.myweather;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnSearch;
     private Button btnCityDetail;
     private ListView lvWeatherEntries;
-
+    private ListView lvNavList;
+    private ActionBarDrawerToggle barDrawerToggle;
+    private DrawerLayout layoutDrawer;
     private List<WeatherItem> data;
     private WeatherListModel model;
 
@@ -43,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         setResourceReferences();
+        addDrawerItems();
+        setupDrawer();
         lvWeatherEntries.setAdapter(model);
+
+        /* activating sidebar menu icon */
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +130,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void addDrawerItems() {
+        String[] navChoices = { "Home", "Image Search" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, navChoices);
+        lvNavList.setAdapter(adapter);
+
+        /* handling side bar links */
+        lvNavList.setOnItemClickListener((parent, view, position, id) -> {
+                Toast.makeText(MainActivity.this, "Test " + position, Toast.LENGTH_SHORT).show();
+            }
+        );
+    }
+
+    private void setupDrawer() {
+        barDrawerToggle = new ActionBarDrawerToggle(this, layoutDrawer, null, R.string.drawer_open, R.string.drawer_close);
+        barDrawerToggle.setDrawerIndicatorEnabled(true);
+        layoutDrawer.addDrawerListener(barDrawerToggle);
+
+    }
+
     private void init() {
         data = new LinkedList<>();
         model = new WeatherListModel(getApplicationContext(), R.layout.weather_entry, data);
@@ -124,5 +159,28 @@ public class MainActivity extends AppCompatActivity {
         btnSearch        = findViewById(R.id.btnSearch);
         btnCityDetail    = findViewById(R.id.btnCityDetail);
         lvWeatherEntries = findViewById(R.id.lvWeatherEntries);
+        lvNavList        = findViewById(R.id.lvNavList);
+        layoutDrawer     = findViewById(R.id.layoutDrawer);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (barDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        barDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        barDrawerToggle.onConfigurationChanged(newConfig);
     }
 }
