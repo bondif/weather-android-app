@@ -3,8 +3,10 @@ package com.bondif.myweather.room;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "photos")
-public class Photo {
+public class Photo implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String latitude;

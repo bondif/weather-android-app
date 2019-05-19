@@ -23,6 +23,7 @@
         <activity android:name=".CityDetail" />
         <activity android:name=".ImageSearchActivity" />
         <activity android:name=".GalleryActivity" />
+        <activity android:name=".MapActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -33,6 +34,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <uses-library android:name="com.google.android.maps" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBRZRgYa8zVIsEKEnnX-lGEYVoc0kn9ykg"/>
     </application>
 
 </manifest>

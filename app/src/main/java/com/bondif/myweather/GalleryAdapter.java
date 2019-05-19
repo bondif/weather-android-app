@@ -1,6 +1,8 @@
 package com.bondif.myweather;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -8,11 +10,21 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,6 +62,12 @@ public class GalleryAdapter extends ArrayAdapter<PhotoModel> {
             e.printStackTrace();
         }
         tvPlaceName.setText(String.valueOf(photosList.get(position).photo.placeName));
+
+        btnViewOnMap.setOnClickListener(event -> {
+            Intent intent = new Intent(parent.getContext(), MapActivity.class);
+            intent.putExtra("com.bondif.myweather.photo", photosList.get(position).photo);
+            parent.getContext().startActivity(intent);
+        });
 
         return listItem;
     }
