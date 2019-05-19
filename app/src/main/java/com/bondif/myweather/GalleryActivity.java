@@ -12,17 +12,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,6 +39,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +54,8 @@ public class GalleryActivity extends AppCompatActivity {
     private List<PhotoModel> photoModels = new LinkedList<>();
     private GalleryAdapter galleryAdapter;
     private ListView lvPhotosList;
+    private String currentPhotoPath;
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,10 +68,12 @@ public class GalleryActivity extends AppCompatActivity {
         galleryAdapter = new GalleryAdapter(getApplicationContext(), R.layout.layout_image_card, photoModels);
         lvPhotosList.setAdapter(galleryAdapter);
 
-        if (!canAccessLocation()) {
+        if (!canAccessLocation() && !canAccessExternalStorage()) {
             ActivityCompat.requestPermissions(this, new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
                     1340);
         }
 
@@ -74,7 +82,21 @@ public class GalleryActivity extends AppCompatActivity {
         btnOpenCamera.setOnClickListener(event -> {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Log.i("MyLog", ex.getMessage());
+                }
+
+                if (photoFile != null) {
+                    Uri photoUri = FileProvider.getUriForFile(
+                            getApplicationContext(),
+                            "com.bondif.myweather.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         });
 
@@ -89,8 +111,11 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(currentPhotoPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Place Name");
@@ -109,10 +134,9 @@ public class GalleryActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Location location) {
                                     if (location != null) {
-                                        String imageName = placeName + (Math.random() * 1000) + ".jpg";
                                         Photo photo = new Photo();
-                                        photo.name = imageName;
-                                        photo.data = saveToInternalStorage(imageBitmap, imageName);
+                                        photo.name = "";
+                                        photo.data = currentPhotoPath;
 
                                         photo.latitude = location.getLongitude() + "";
                                         photo.longitude = location.getLatitude() + "";
@@ -137,43 +161,22 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage, String imageName) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        File directory = cw.getDir("images", Context.MODE_PRIVATE);
-        File mypath = new File(directory, imageName);
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return directory.getAbsolutePath();
-    }
-
-    public static ImageView loadImageFromStorage(String path, String imageName, ImageView imageView) {
-
-        try {
-            File f = new File(path, imageName);
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            imageView.setImageBitmap(b);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return imageView;
+        currentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     private boolean canAccessLocation() {
         return ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean canAccessExternalStorage() {
+        return ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void setResourceReferences() {
