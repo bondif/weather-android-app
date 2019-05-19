@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        String[] navChoices = { "Home", "Image Search" };
+        String[] navChoices = { "Home", "Image Search", "Images Gallery" };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, navChoices);
         lvNavList.setAdapter(adapter);
 
@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         lvNavList.setOnItemClickListener((parent, view, position, id) -> {
                 if(position == 1) {
                     Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
+                    startActivity(intent);
+                } else if (position == 2) {
+                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                     startActivity(intent);
                 }
             }
