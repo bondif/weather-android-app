@@ -12,6 +12,9 @@ public interface PhotoDao {
     @Insert
     public void insertPhoto(Photo photo);
 
+    @Query("SELECT * from photos WHERE placeName like :q")
+    public Photo[] findAllByPlaceName(String q);
+
     @Query("DELETE FROM photos")
     public void deleteAll();
 }

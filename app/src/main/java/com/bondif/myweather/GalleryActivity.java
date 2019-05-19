@@ -56,6 +56,8 @@ public class GalleryActivity extends AppCompatActivity {
     private ListView lvPhotosList;
     private String currentPhotoPath;
     private Bitmap imageBitmap;
+    private EditText etSearchPhotos;
+    private Button btnSearchPhotos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +100,19 @@ public class GalleryActivity extends AppCompatActivity {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
+        });
+
+        btnSearchPhotos.setOnClickListener(event -> {
+            String query = "%" + etSearchPhotos.getText().toString() + "%";
+            Photo[] photos = appDatabase.photoDao().findAllByPlaceName(query);
+            photoModels.clear();
+            List<PhotoModel> photoModels = new LinkedList<>();
+
+            for (Photo photo: photos)
+                photoModels.add(new PhotoModel(photo));
+
+            this.photoModels.addAll(photoModels);
+            galleryAdapter.notifyDataSetChanged();
         });
 
         Photo[] photos = appDatabase.photoDao().findAll();
@@ -182,5 +197,7 @@ public class GalleryActivity extends AppCompatActivity {
     private void setResourceReferences() {
         btnOpenCamera = findViewById(R.id.btnOpenCamera);
         lvPhotosList = findViewById(R.id.photosList);
+        btnSearchPhotos = findViewById(R.id.btnSearchPhotos);
+        etSearchPhotos = findViewById(R.id.etSearchPhotos);
     }
 }
