@@ -8,4 +8,6 @@ The application uses OpenWeatherMap ( https://openweathermap.org ) to display we
 
 It also uses Pixabay ( https://pixabay.com/service/about/api ) to load images based on a query, and finally it allows to take pictures and automatically stores location of this picture in a SQLite database, to view them later using Google Maps.
 
+Make sure to edit the Google Maps API Key in [app/src/main/AndroidManifest.xml](https://github.com/bondif/weather-android-app/blob/master/app/src/main/AndroidManifest.xml) in order for the Map to work.
+
 If you like it don't hesitate to give it a star ⭐️
