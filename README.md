@@ -1,13 +1,29 @@
-# Weather App and much more 😋
+# Weather Forecast Mobile Application and much more 😋
 
-This is a weather forcast android application using OpenWeatherMap and images search engine using Pixabay + Google Maps for locations
+The application is divided into 3 parts :    
+### 1. Weather Forecast
+The user can search for a city to get its min/max temperature, the pressure and humidity for every 3 hours in the next 4 days.    
+Using a chart, the user can also view the wind, the precipitations and temperature of every day in the the next week.    
+The app uses [Open Weather Map](https://openweathermap.org/) to get the all weather forecast information mentioned above.    
 
-This project is given by M. Mohamed Youssfi ( https://www.youtube.com/channel/UCCwIYNpQVHZTd3Vx_krnmdA ) as end of semester project.
+### 2. Images Search Engine
+Using a keyword, the use can look for images he/she wants.    
+The app uses [Pixabay API](https://pixabay.com/) to search images.
 
-The application uses OpenWeatherMap ( https://openweathermap.org ) to display weather information (min temperature, max temperature, pressure and humidity) about the next 5 days.
+### 3. Images Gallery
+The user can take photos using his/her phone camera (camera permission needed).    
+Every time the user takes a photo, the application records the location and store locally (SQLite DB) with the photo.    
+Later, the user can view photos (gallery permission needed), and see the location they've been taken on, using Google Maps.    
+The application uses [Google Maps API](https://developers.google.com/maps/documentation), and it uses [SQLite](https://www.sqlite.org/) to store the image and its location.
 
-It also uses Pixabay ( https://pixabay.com/service/about/api ) to load images based on a query, and finally it allows to take pictures and automatically stores location of this picture in a SQLite database, to view them later using Google Maps.
+#### More Technical Details
+The application uses :
 
-Make sure to edit the Google Maps API Key in [app/src/main/AndroidManifest.xml](https://github.com/bondif/weather-android-app/blob/master/app/src/main/AndroidManifest.xml) in order for the Map to work.
 
-If you like it don't hesitate to give it a star ⭐️
+- [Android Volley](https://developer.android.com/training/volley) for HTTP Calls.
+- [Picasso](https://square.github.io/picasso/) to render images.
+- [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) for charts.
+
+Make sure you edit the Google Maps API Key in [app/src/main/AndroidManifest.xml](https://github.com/bondif/weather-android-app/blob/master/app/src/main/AndroidManifest.xml) in order for the Map to work.
+
+If you like it do not hesitate to give it a star ⭐️
