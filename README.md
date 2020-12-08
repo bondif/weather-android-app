@@ -1,5 +1,8 @@
 # Weather Forecast Mobile Application and much more 😋
 
+#### Demo Video     
+[![Video](https://img.youtube.com/vi/c7r7rQEb1KM/hqdefault.jpg)](https://www.youtube.com/watch?v=c7r7rQEb1KM)
+
 The application is divided into 3 parts :    
 ### 1. Weather Forecast
 The user can search for a city to get its min/max temperature, the pressure and humidity for every 3 hours in the next 4 days.    
